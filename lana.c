@@ -185,3 +185,35 @@ void jouerbonus(T_Position *currentPosition,T_ListeCoups *listeCoups)
 
 
 }
+
+
+
+/////// Fonctions utilitaires
+
+// Permet d'évaluer le gain partant de currentPosition selon le coup joué.
+octet getGain(const T_Position currentPosition, T_Coup coup) {
+    octet origColor = currentPosition.cols[coup.origine].couleur;
+    octet destColor = currentPosition.cols[coup.destination].couleur;
+
+    octet origBonus = 0;
+    octet destBonus = 0;
+
+    origBonus += ((coup.origine == currentPosition.evolution.bonusJ) + (coup.origine == currentPosition.evolution.bonusR));
+    origBonus -= ((coup.origine == currentPosition.evolution.malusJ) + (coup.origine == currentPosition.evolution.malusR));
+
+    destBonus += ((coup.destination == currentPosition.evolution.bonusJ) + (coup.destination == currentPosition.evolution.bonusR));
+    destBonus -= ((coup.destination == currentPosition.evolution.malusJ) + (coup.destination == currentPosition.evolution.malusR)); 
+
+    //origBonus *= -(origColor != currentPosition.trait);
+    //destBonus *= -(destColor != currentPosition.trait);
+
+    octet gain = 0;
+
+    gain += 1-2*(currentPosition.trait == destColor) + origBonus + destBonus;
+
+    gain -= (1+origBonus)*-(origColor != currentPosition.trait) + (1+destBonus)*-(destColor != currentPosition.trait);
+
+    printf("Le gain du coup choisi est évalué à  %d", gain);
+
+    return gain;
+}
