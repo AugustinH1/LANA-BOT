@@ -1,0 +1,9 @@
+
+Tableau de 500x500
+- Placer en 0 la longueur de la ligne
+- Avoir en possession le nombre de lignes
+
+Réaliser une évaluation de chaque situation (pour le moment score)
+Chaque ligne représente un move différent de votre part, chaque colonne une réponse différente de l'adversaire
+
+Alpha-beta pruning basique: Enlever chaque move qui fait directement perdre des points, à moins de trouver un contre-exemple, quasi jamais useful.
