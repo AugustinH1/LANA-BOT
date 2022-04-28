@@ -150,15 +150,33 @@ void jouerbonus(T_Position *currentPosition,T_ListeCoups *listeCoups)
 
     for(i=0;i<listeCoups->nb; ++i)
     {
+        int tmp=0;
         o = listeCoups->coups[i].origine; 
         d = listeCoups->coups[i].destination;  
     
 
+        //SI NOTRE COULEUR = JAUNE
+
+        //placement bonus jaune
         if (currentPosition->numCoup == 0 && o == 28 && d == 28 ) 
         {
             ecrireIndexCoup(i);
             break;
         }
+
+        //placement malus jaune
+        if (currentPosition->numCoup == 2 && o == 28 && d == 28 ) 
+        {
+    
+            ecrireIndexCoup(i);
+            break;
+        }
+
+
+
+        //SI NOTRE COULEUR = ROUGE
+
+        //placement bonus rouge
         if (currentPosition->numCoup == 1 && o == 14 && d == 14 ) 
         {
     
@@ -166,19 +184,33 @@ void jouerbonus(T_Position *currentPosition,T_ListeCoups *listeCoups)
             break;
         }
 
-        /*if (currentPosition->numCoup == 2 && o == 14 && d == 14 ) 
+        //placement malus rouge
+        if (currentPosition->numCoup == 3) 
         {
-    
-            ecrireIndexCoup(i);
-            break;
-        }
+            T_Voisins Voisins = getVoisins(o);
+            
+            
 
-        if (currentPosition->numCoup == 2 && o == 14 && d == 14 ) 
-        {
-            ecrireIndexCoup(i);
-            break;
+            printf(" %d le nombre de Voisin est:%d\n",i,Voisins.nb);
+
+            for (int j = 0; j < Voisins.nb; ++j)
+            {
+                printf("dans le for\n");
+
+                
+                if ( Voisins.cases[j]==currentPosition->evolution.bonusJ)
+                {
+                    printf("dans le if\n");
+                    ecrireIndexCoup(i);
+                    break;
+                    tmp  = 1;
+                }
+        
+            }
+           
+            
+        
         }
-        */
 
 	}
 
