@@ -1,3 +1,4 @@
+################ Principe de base
 
 Tableau de 500x500
 - Placer en 0 la longueur de la ligne
@@ -7,3 +8,29 @@ Réaliser une évaluation de chaque situation (pour le moment score)
 Chaque ligne représente un move différent de votre part, chaque colonne une réponse différente de l'adversaire
 
 Alpha-beta pruning basique: Enlever chaque move qui fait directement perdre des points, à moins de trouver un contre-exemple, quasi jamais useful.
+
+
+
+
+############## Amélioration de la gestion du temps
+
+- Meilleur calcul du gain
+- Simplification du tableau, se concentrer sur les moves les plus utiles
+
+
+
+############ Amélioration de l'évaluation min-max
+
+- Meilleure évaluation du plateau (points intéréssants)
+- Faire une liste de possibles points d'intéret, faudra les tester un par un contre un LanaB OMEGALUL T
+
+
+
+
+
+############ Debugger mayB
+
+- Pratique pour visualiser les différentes tâches du LanaBot
+
+
+
