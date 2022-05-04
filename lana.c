@@ -57,29 +57,22 @@ void choisirCoup(T_Position currentPosition, T_ListeCoups listeCoups) {
 //
 void precoups(T_Position *currentPosition,T_ListeCoups *listeCoups)
 {
+
+
+   
     int i; 
 	octet o, d; 
-	octet myColor = currentPosition->trait; 
+	octet myColor = currentPosition->trait;
+
+    octet tmpmalus;
+
+    if(myColor==ROU)
+        tmpmalus=currentPosition->evolution.malusJ;
+    else
+        tmpmalus=currentPosition->evolution.malusR;
+
     
     
-
-	for(i=0;i<listeCoups->nb; ++i) {
-        o = listeCoups->coups[i].origine; 
-        d = listeCoups->coups[i].destination;  
-        
-        
-
-        if ((currentPosition->cols[o].couleur == myColor) && (currentPosition->cols[d].couleur != myColor))
-        {
-            printf("On choisit ce coup:");
-            printf("Coup %d : ", i); 
-            printf("%d (%d - %s) ->", o, currentPosition->cols[o].nb, COLNAME(currentPosition->cols[o].couleur));
-            printf("%d (%d - %s) \n", d, currentPosition->cols[d].nb, COLNAME(currentPosition->cols[d].couleur));
-            ecrireIndexCoup(i);
-            break;
-        }
-    }
-
     //joue un coups de la couleur adverse sur la couleur adverse, mais seulement pour les tours de 1 dans le but de ne pas nous saboter
 	//-----------------------------------------------------//
     for(i=0;i<listeCoups->nb; ++i) {
@@ -90,6 +83,49 @@ void precoups(T_Position *currentPosition,T_ListeCoups *listeCoups)
         if ((currentPosition->cols[o].couleur != myColor) && (currentPosition->cols[d].couleur != myColor)
             && (currentPosition->cols[o].nb==1) && (currentPosition->cols[d].nb==1)) 
         {
+           
+            printf("On choisit ce coup:");
+            printf("Coup %d : ", i); 
+            printf("%d (%d - %s) ->", o, currentPosition->cols[o].nb, COLNAME(currentPosition->cols[o].couleur));
+            printf("%d (%d - %s) \n", d, currentPosition->cols[d].nb, COLNAME(currentPosition->cols[d].couleur));
+            ecrireIndexCoup(i);
+            break;
+        }
+	}
+    
+    //joue un pion de notre couleur sur la couleur adverse
+    //-----------------------------------------------------//
+	for(i=0;i<listeCoups->nb; ++i) {
+        o = listeCoups->coups[i].origine; 
+        d = listeCoups->coups[i].destination;  
+        
+        
+
+        if ((currentPosition->cols[o].couleur == myColor) && (currentPosition->cols[d].couleur != myColor)
+            && (currentPosition->cols[o].nb==1) && (currentPosition->cols[d].nb==1) && (d != tmpmalus))
+        {
+            printf("On choisit ce coup:");
+            printf("Coup %d : ", i); 
+            printf("%d (%d - %s) ->", o, currentPosition->cols[o].nb, COLNAME(currentPosition->cols[o].couleur));
+            printf("%d (%d - %s) \n", d, currentPosition->cols[d].nb, COLNAME(currentPosition->cols[d].couleur));
+            ecrireIndexCoup(i);
+            break;
+        }
+    }
+
+  
+
+
+    //enpiler un pion rouge sur 2 pions jaune
+    //-----------------------------------------------------//
+    for(i=0;i<listeCoups->nb; ++i) {
+		o = listeCoups->coups[i].origine; 
+		d = listeCoups->coups[i].destination;  
+		 
+
+        if ((currentPosition->cols[o].couleur == myColor) && (currentPosition->cols[d].couleur != myColor)
+            && (currentPosition->cols[o].nb==1) && (currentPosition->cols[d].nb==2) && (d != tmpmalus)) 
+        {
             printf("On choisit ce coup:");
             printf("Coup %d : ", i); 
             printf("%d (%d - %s) ->", o, currentPosition->cols[o].nb, COLNAME(currentPosition->cols[o].couleur));
@@ -99,14 +135,15 @@ void precoups(T_Position *currentPosition,T_ListeCoups *listeCoups)
         }
 	}
 
+
     //cherche si c'est possible de faire des tours de 5
     //-----------------------------------------------------//
     for(i=0;i<listeCoups->nb; ++i) {
 		o = listeCoups->coups[i].origine; 
 		d = listeCoups->coups[i].destination;  
 		
-
-        if ((currentPosition->cols[o].couleur == myColor) && ((currentPosition->cols[o].nb+currentPosition->cols[d].nb) == 5 )) 
+    
+        if ((currentPosition->cols[o].couleur == myColor) && ((currentPosition->cols[o].nb+currentPosition->cols[d].nb) == 5 )  && (d != tmpmalus)) 
         {
             printf("On choisit ce coup:");
             printf("Coup %d : ", i); 
@@ -124,7 +161,7 @@ void precoups(T_Position *currentPosition,T_ListeCoups *listeCoups)
 		d = listeCoups->coups[i].destination;  
 		
 
-        if ((currentPosition->cols[o].couleur == myColor) && (nbVoisins(o) == 1)) 
+        if ((currentPosition->cols[o].couleur == myColor) && (nbVoisins(d) == 1) && (d != tmpmalus)) 
         {
             printf("On choisit ce coup:");
             printf("Coup %d : ", i); 
