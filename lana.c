@@ -307,8 +307,6 @@ int minmax(T_Position pos, int depth, T_Data data) {
             if(value > eval) {
                 optiCoup = idCoup;
                 eval = value;
-                if(depth == data.initialDepth-1)
-                    printf("Depth : %d | Eval : %d", depth, eval);
             }
         }
         if(depth == data.initialDepth) {
@@ -323,6 +321,8 @@ int minmax(T_Position pos, int depth, T_Data data) {
             int value = minmax(child, depth-1, data);
             if(value < eval) {
                 eval = value;
+                if(depth == data.initialDepth-1)
+                    printf("Depth : %d | Eval : %d", depth, eval);
             }
         }
         // if(depth == data.initialDepth) {
@@ -393,9 +393,18 @@ int getEvaluation(const T_Position currPos, T_ListeCoups liste, int lanaCouleur)
         eval += 1;
     }
 
+    if(currPos.evolution.bonusR == currPos.evolution.bonusJ) {
+        if(currPos.cols[currPos.evolution.bonusJ].couleur == lanaCouleur) {
+            eval += 10;
+        } else {
+            eval -= 10;
+        }
+    }
+
     for(int i = 0; i < 48; i++) {
         T_Colonne col = currPos.cols[i];
         T_Voisins voisins = getCurrentVoisins(currPos, col.nb, 0);
+        T_Voisins voisinsAllies = getCurrentVoisins(currPos, col.nb, lanaCouleur);
 
         if(col.nb == 0) {
             continue;
@@ -409,17 +418,25 @@ int getEvaluation(const T_Position currPos, T_ListeCoups liste, int lanaCouleur)
 
         if(voisins.nb == 0) {
             if(col.couleur == lanaCouleur) {
-                eval += 5;
+                eval += 18;
             } else {
-                eval += -5;
+                eval += -18;
             }
         } 
 
-        if(voisins.nb == 0) {
+        if(voisinsAllies.nb == voisins.nb) {
             if(col.couleur == lanaCouleur) {
-                eval += 5;
+                eval += 9;
             } else {
-                eval += -5;
+                eval += -9;
+            }
+        }
+
+        if(voisins.nb == 1) {
+            if(col.couleur != lanaCouleur) {
+                if(col.nb + voisins.cases[0] > 5) {
+                    eval += 22;
+                }
             }
         } 
 
@@ -498,7 +515,7 @@ T_Voisins getCurrentVoisins(const T_Position position, const octet posPion, octe
     T_Voisins voisins = getVoisins(posPion);
 
     for(octet i=0; i<voisins.nb; i++) {
-        if(position.cols[voisins.cases[i]].nb == 0 || (color != 0 && position.cols[voisins.cases[i]].couleur != color)) {
+        if(position.cols[voisins.cases[i]].nb == 0 || position.cols[voisins.cases[i]].nb == 5 || (color != 0 && position.cols[voisins.cases[i]].couleur != color)) {
             voisins.cases[i] = voisins.cases[voisins.nb];
             voisins.nb--; 
             i--;  
@@ -507,7 +524,3 @@ T_Voisins getCurrentVoisins(const T_Position position, const octet posPion, octe
 
     return voisins;
 }
-
-// octet getNbVoisins(const T_Position, const octet posPion, octet color) {
-
-// }
