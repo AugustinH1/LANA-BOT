@@ -51,14 +51,19 @@ void choisirCoup(T_Position currentPosition, T_ListeCoups listeCoups) {
 
         printf("[PRECOUP] Préselection du coup: %d -> %d\n", coup.origine, coup.destination);
 
-        int initialDepth = 4;
+        int initialDepth = 6;
+
+         if(currentPosition.numCoup < 35)
+             initialDepth = 8;
+
+        printf("Commentcement du calcul... | Nombre de coups : %d | Depth : %d\n", listeCoups.nb, initialDepth);
 
         T_Data data;
         data.lanaCouleur = currentPosition.trait;
         data.initialDepth = initialDepth;
         int idCoup = minmax(currentPosition, initialDepth, data);
 
-        printf("[MINMAX] idDuCoup : %d\n", idCoup);
+        printf("[MINMAX] id du Coup : %d\n", idCoup);
         ecrireIndexCoup(idCoup);
     }
 
@@ -187,22 +192,24 @@ void precoups(T_Position *currentPosition,T_ListeCoups *listeCoups, T_Coup *coup
 
     //si un pion a 1 seul voisin de notre couleur, alors prendre la tours
     //-----------------------------------------------------//
-    for(i=0;i<listeCoups->nb; ++i) {
-		o = listeCoups->coups[i].origine; 
-		d = listeCoups->coups[i].destination;  
+    // for(i=0;i<listeCoups->nb; ++i) {
+	// 	o = listeCoups->coups[i].origine; 
+	// 	d = listeCoups->coups[i].destination;  
+
+    //     octet nbVoisins = getCurrentVoisins(*currentPosition, d, 0).nb;
 		
 
-        if ((currentPosition->cols[o].couleur == myColor) && (nbVoisins(d) == 1) && (d != tmpmalus)) 
-        {
-            // printf("On choisit ce coup:");
-            // printf("Coup %d : ", i); 
-            // printf("%d (%d - %s) ->", o, currentPosition->cols[o].nb, COLNAME(currentPosition->cols[o].couleur));
-            // printf("%d (%d - %s) \n", d, currentPosition->cols[d].nb, COLNAME(currentPosition->cols[d].couleur));
-            ecrireIndexCoup(i);
-            *coupFinal = listeCoups->coups[i];
-            break;
-        }
-	}
+    //     if ((currentPosition->cols[o].couleur == myColor) && (nbVoisins == 1) && (d != tmpmalus)) 
+    //     {
+    //         // printf("On choisit ce coup:");
+    //         // printf("Coup %d : ", i); 
+    //         // printf("%d (%d - %s) ->", o, currentPosition->cols[o].nb, COLNAME(currentPosition->cols[o].couleur));
+    //         // printf("%d (%d - %s) \n", d, currentPosition->cols[d].nb, COLNAME(currentPosition->cols[d].couleur));
+    //         ecrireIndexCoup(i);
+    //         *coupFinal = listeCoups->coups[i];
+    //         break;
+    //     }
+	// }
  
 
 }
@@ -321,8 +328,8 @@ int minmax(T_Position pos, int depth, T_Data data) {
             int value = minmax(child, depth-1, data);
             if(value < eval) {
                 eval = value;
-                if(depth == data.initialDepth-1)
-                    printf("Depth : %d | Eval : %d", depth, eval);
+                // if(depth == data.initialDepth-1)
+                    //printf("Depth : %d | Eval : %d\n", depth, eval);
             }
         }
         // if(depth == data.initialDepth) {
@@ -403,8 +410,7 @@ int getEvaluation(const T_Position currPos, T_ListeCoups liste, int lanaCouleur)
 
     for(int i = 0; i < 48; i++) {
         T_Colonne col = currPos.cols[i];
-        T_Voisins voisins = getCurrentVoisins(currPos, col.nb, 0);
-        T_Voisins voisinsAllies = getCurrentVoisins(currPos, col.nb, lanaCouleur);
+        T_Voisins voisins = getCurrentVoisins(currPos, col.nb, 0);  
 
         if(col.nb == 0) {
             continue;
@@ -424,21 +430,13 @@ int getEvaluation(const T_Position currPos, T_ListeCoups liste, int lanaCouleur)
             }
         } 
 
-        if(voisinsAllies.nb == voisins.nb) {
-            if(col.couleur == lanaCouleur) {
-                eval += 9;
-            } else {
-                eval += -9;
-            }
-        }
-
-        if(voisins.nb == 1) {
-            if(col.couleur != lanaCouleur) {
-                if(col.nb + voisins.cases[0] > 5) {
-                    eval += 22;
-                }
-            }
-        } 
+        // if(voisins.nb == 1) {
+        //     if(col.couleur != lanaCouleur) {
+        //         if(col.nb + voisins.cases[0] > 5) {
+        //             eval += 22;
+        //         }
+        //     }
+        // } 
 
         if(col.nb == 5) {
             if(col.couleur == lanaCouleur) {
